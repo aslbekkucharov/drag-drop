@@ -1,0 +1,53 @@
+@import './utils.scss';
+@import '../fonts/stylesheet.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: Acrom;
+}
+
+body {
+    background-color: #f4f4f4;
+}
+
+#app {
+    height: 100%;
+}
+
+.wrapper {
+    height: 100%;
+    padding: 0 15px;
+    margin: 30px auto;
+    max-width: 1650px;
+}
+
+.section {
+    &__title {
+        font-size: 28px;
+        font-weight: 500;
+    }
+}
+
+.search-result {
+    padding: 4px 10px;
+    align-items: center;
+    border-radius: 14px;
+    display: inline-flex;
+    background-color: #ffffff;
+
+    &__label {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 20px;
+        color: #397AF5;
+    }
+}
