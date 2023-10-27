@@ -1,0 +1,43 @@
+.btn {
+    padding: 8px;
+    border: none;
+    flex-shrink: 0;
+    cursor: pointer;
+    align-items: center;
+    display: inline-flex;
+    transition: all 0.2s linear;
+    background-color: transparent;
+
+    &:active {
+        opacity: 0.8;
+    }
+
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    &--rounded {
+        border-radius: 12px;
+    }
+
+    &--primary {
+        background-color: #397AF5;
+
+        &:hover {
+            background-color: #356fdc;
+        }
+    }
+
+    &--outlined {
+        border: 1px solid #397AF5;
+
+        .icon {
+            fill: #ffffff;
+        }
+
+        &:hover {
+            background-color: rgba(66, 132, 255, 0.25);
+        }
+    }
+}

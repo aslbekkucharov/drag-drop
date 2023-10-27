@@ -1,5 +1,8 @@
 @import './utils.scss';
-@import '../fonts/stylesheet.css';
+@import './components/icons.scss';
+@import './components/button.scss';
+@import '../fonts/Acrom/stylesheet.css';
+@import '../fonts/Gilroy/stylesheet.css';
 
 * {
     margin: 0;
@@ -12,10 +15,10 @@
 html,
 body {
     height: 100%;
-    font-family: Acrom;
 }
 
 body {
+    font-family: Gilroy;
     background-color: #f4f4f4;
 }
 
@@ -27,13 +30,22 @@ body {
     height: 100%;
     padding: 0 15px;
     margin: 30px auto;
-    max-width: 1650px;
+    max-width: 1655px;
 }
 
 .section {
+
+    &__header {
+        gap: 0 15px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
     &__title {
         font-size: 28px;
         font-weight: 500;
+        font-family: Acrom;
     }
 }
 
@@ -49,5 +61,115 @@ body {
         font-weight: 500;
         line-height: 20px;
         color: #397AF5;
+    }
+}
+
+.cards {
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    border-radius: 12px;
+    background-color: #ffffff;
+
+    &__inner {
+        gap: 10px;
+        display: flex;
+        padding: 20px 25px;
+    }
+}
+
+.card-col {
+
+    &__name {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: #949494;
+        margin-bottom: 8px;
+    }
+
+    &__value {
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    &--numb {
+        flex: 0 1 5%;
+    }
+
+    &--name {
+        flex: 0 1 20%;
+
+        .card-col__value {
+            display: inline-flex;
+            align-items: flex-start;
+        }
+
+        .card-col__value::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+            background-image: url('../icons/folder.svg');
+        }
+    }
+
+    &--root {
+        .card-col__value {
+            display: inline-flex;
+            align-items: flex-start;
+        }
+
+        .card-col__value::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+            background-image: url('../icons/file.svg');
+        }
+    }
+
+    &--order {
+        flex: 0 1 10%;
+    }
+
+    &--count {
+        display: flex;
+        align-items: center;
+    }
+
+    &--subcats {
+        flex: 0 1 55%;
+    }
+
+    &--actions {
+        gap: 5px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.card-col-label {
+    padding: 2px 9px;
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+
+    &--grey {
+        opacity: 0.3;
+        border-radius: 30px;
+        background-color: #2552C6;
+
+        .card-col-label__text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+        }
     }
 }
