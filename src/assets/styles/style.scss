@@ -1,4 +1,4 @@
-@import './utils.scss';
+@import './utils/utils.scss';
 @import './components/icons.scss';
 @import './components/button.scss';
 @import '../fonts/Acrom/stylesheet.css';
@@ -73,11 +73,16 @@ body {
 .card {
     border-radius: 12px;
     background-color: #ffffff;
+    transition: all 0.2s linear;
 
     &__inner {
         gap: 10px;
         display: flex;
         padding: 20px 25px;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid #e1e1e1;
+        }
     }
 }
 

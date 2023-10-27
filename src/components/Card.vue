@@ -23,15 +23,14 @@
                     <span class="card-col__value">{{ cardSubcats }}</span>
                 </div>
 
-                <div class="card-col card-col--count">
-                    <!-- <span class="card-col__name">⠀</span> -->
+                <div v-if="card.hasChildrens" class="card-col card-col--count">
                     <span class="card-col-label card-col-label--grey">
                         <span class="card-col-label__text">12</span>
                     </span>
                 </div>
 
-                <div class="card-col card-col--actions">
-                    <button class="btn btn--rounded btn--primary">
+                <div class="card-col card-col--actions" :class="{ 'ml-auto': !card.hasChildrens }">
+                    <button v-if="card.hasChildrens" @click="toggleCollapse" class="btn btn--rounded btn--primary">
                         <span class="icon icon--chewron-down"></span>
                     </button>
                     <button class="btn btn--rounded btn--outlined">
@@ -40,7 +39,9 @@
                 </div>
             </div>
 
-            <slot></slot>
+            <transition-group name="fade">
+                <slot v-if="isChildsCollapsed"></slot>
+            </transition-group>
 
         </div>
 
@@ -48,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, ref } from 'vue'
 
 const props = defineProps({
     card: {
@@ -56,10 +57,16 @@ const props = defineProps({
         required: true
     },
     index: {
-        type: Number,
+        type: [Number, String],
         requried: true
     }
 })
+
+const isChildsCollapsed = ref<boolean>(false)
+
+function toggleCollapse() {
+    isChildsCollapsed.value = !isChildsCollapsed.value
+}
 
 const cardSubcats = computed(() => {
     const subcats = props.card.hasChildrens ? props.card.childrens.map((ch: object) => ch.name) : '-'
