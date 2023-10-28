@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <transition-group name="fade">
+            <transition-group name="slide-fade">
                 <slot v-if="isChildsCollapsed"></slot>
             </transition-group>
 

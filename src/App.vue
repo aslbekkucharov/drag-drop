@@ -10,10 +10,10 @@
       </div>
 
       <div class="cards">
-        <Card v-for="(card, i) in cards" :key="i" :index="i + 1" :card="card">
+        <Card v-for="(card, i) in cards" :key="i" :index="i + 1" :card="card" :draggable="true" @dragstart="onDragStart(i)" @dragover="onDragOver(i)" @dragend="onDragEnd" @drop="onDrop(i)">
           <template v-if="card.hasChildrens">
             <Card v-for="(children, j) in card.childrens" :key="j" :index="subIndex(i, j)" :card="children" />
-          </template>
+          </template> 
         </Card>
       </div>
 
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import Card from './components/Card.vue';
 
 const cards = reactive([
@@ -67,51 +67,61 @@ const cards = reactive([
     childrens: [
       {
         id: 0,
+        order: 1,
         hasChildrens: false,
         name: 'Максимал фойда (Нац. валюта)',
       },
       {
         id: 1,
+        order: 2,
         hasChildrens: false,
         name: 'On-line (Нац. валюта)',
       },
       {
         id: 2,
+        order: 3,
         hasChildrens: false,
         name: 'Аванс (Нац. валюта)',
       },
       {
         id: 3,
+        order: 4,
         hasChildrens: false,
         name: 'Максимал фойда (Ин. валюта)',
       },
       {
         id: 4,
+        order: 5,
         hasChildrens: true,
         name: 'On-line (Ин. валюта)',
         childrens: [
           {
             id: 0,
+            order: 1,
             hasChildrens: false,
             name: 'Максимал фойда (Нац. валюта)',
           },
           {
             id: 1,
+            order: 2,
             hasChildrens: false,
             name: 'On-line (Нац. валюта)',
           },
           {
             id: 2,
+            order: 3,
             hasChildrens: false,
             name: 'Аванс (Нац. валюта)',
           },
           {
             id: 3,
+            order: 4,
             hasChildrens: false,
             name: 'Максимал фойда (Ин. валюта)',
           },
           {
             id: 4,
+            order: 5,
             hasChildrens: false,
             name: 'On-line (Ин. валюта)',
           }
@@ -121,8 +131,32 @@ const cards = reactive([
   }
 ])
 
+const draggingIndex = ref<number | null>(null)
+
 function subIndex(index: number, sub: number) {
   return `${index + 1}.${sub + 1}`
+}
+
+function onDragStart(index: number) {
+  draggingIndex.value = index
+}
+
+function onDragOver(index: number) {
+  if (index !== draggingIndex.value) {
+    // Swap items in the array
+    const draggedItem = cards[draggingIndex.value]
+    cards.splice(draggingIndex.value, 1)
+    cards.splice(index, 0, draggedItem)
+    draggingIndex.value = index
+  }
+}
+
+function onDragEnd() {
+  draggingIndex.value = null
+}
+
+function onDrop(index: number) {
+
 }
 
 </script>

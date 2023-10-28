@@ -27,10 +27,9 @@ body {
 }
 
 .wrapper {
-    height: 100%;
-    padding: 0 15px;
-    margin: 30px auto;
+    margin: 0px auto;
     max-width: 1655px;
+    padding: 30px 15px;
 }
 
 .section {
@@ -73,7 +72,6 @@ body {
 .card {
     border-radius: 12px;
     background-color: #ffffff;
-    transition: all 0.2s linear;
 
     &__inner {
         gap: 10px;
