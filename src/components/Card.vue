@@ -9,7 +9,7 @@
 
             <div class="card-col card-col--name" :class="{ 'card-col--root': !card.hasChildrens }">
                 <span class="card-col__name">Название</span>
-                <span class="card-col__value">{{ card.name }}</span>
+                <span class="card-col__value">{{ cardName }}</span>
             </div>
 
             <div class="card-col card-col--order">
@@ -58,7 +58,10 @@ import { applyDrag } from '@/utils'
 import { dndSettings } from '@/config'
 import { Container, Draggable } from "vue3-smooth-dnd"
 import type { CardType, DnDPayloadType } from '@/types'
-import { defineProps, computed, ref, type PropType, type ComputedRef, inject, type Ref } from 'vue'
+import { useWindowResize } from '@/composables/useWindowResize'
+import { defineProps, computed, ref, type PropType, type ComputedRef, inject, type Ref, watch, onMounted } from 'vue'
+
+const { width } = useWindowResize()
 
 const props = defineProps({
     card: {
@@ -78,6 +81,8 @@ const props = defineProps({
 })
 
 const cards = inject<Ref<CardType[]>>('cards')
+const nameStringMaxLength = ref<number>(28)
+const subCatsStringMaxLength = ref<number>(90)
 
 const isChildsCollapsed = ref<boolean>(false)
 
@@ -85,7 +90,11 @@ const cardSubcats: ComputedRef<string | undefined> = computed(() => {
     const subcats: string[] | string | undefined = props.card.hasChildrens ? props.card.childrens?.map((child: CardType) => child.name) : '-'
     const result = Array.isArray(subcats) ? subcats.join(' / ') : subcats
 
-    return result && result.length > 90 ? result.substring(0, 90) + "..." : result
+    return result && result.length > subCatsStringMaxLength.value ? result.substring(0, subCatsStringMaxLength.value) + "..." : result
+})
+
+const cardName: ComputedRef<string> = computed(() => {
+    return props.card.name.length > nameStringMaxLength.value ? props.card.name.substring(0, nameStringMaxLength.value) + "..." : props.card.name
 })
 
 function toggleCollapse(): void {
@@ -99,10 +108,6 @@ function getChildPayload(index: number): { index: number, parentId: number | und
         index,
         parentId
     }
-}
-
-function generateIndex(parentIndex: number | string, card: CardType): string {
-    return `${parentIndex}.${card.order}`
 }
 
 function updateChildrensRecursively(cards: CardType[], parentId: number, payload: DnDPayloadType) {
@@ -120,5 +125,23 @@ function onDrop(data: DnDPayloadType) {
         updateChildrensRecursively(cards.value, data.payload.parentId, data)
     }
 }
+
+function setStringsInitialLength(val: number) {
+    if (val <= 1200) {
+        subCatsStringMaxLength.value = 50
+        nameStringMaxLength.value = 12
+    } else {
+        subCatsStringMaxLength.value = 90
+        nameStringMaxLength.value = 28
+    }
+}
+
+onMounted(() => {
+    setStringsInitialLength(width.value)
+})
+
+watch(width, (newVal) => {
+    setStringsInitialLength(newVal)
+})
 
 </script>
