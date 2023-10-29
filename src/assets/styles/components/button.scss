@@ -12,9 +12,11 @@
         opacity: 0.8;
     }
 
-    .icon {
+    &__icon {
         width: 20px;
         height: 20px;
+        stroke: #ffffff;
+        transition: transform 0.2s linear;
     }
 
     &--rounded {
@@ -32,12 +34,22 @@
     &--outlined {
         border: 1px solid #397AF5;
 
-        .icon {
-            fill: #ffffff;
+        .btn__icon {
+            fill: #397af5;
         }
 
         &:hover {
             background-color: rgba(66, 132, 255, 0.25);
+        }
+    }
+
+    &.card-expanded {
+        border: 1px solid #397af5;
+        background-color: #edf2ff;
+
+        .btn__icon {
+            stroke: #397af5;
+            transform: rotate(180deg);
         }
     }
 }

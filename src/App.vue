@@ -10,11 +10,17 @@
       </div>
 
       <div class="cards">
-        <Card v-for="(card, i) in cards" :key="i" :index="i + 1" :card="card" :draggable="true" @dragstart="onDragStart(i)" @dragover="onDragOver(i)" @dragend="onDragEnd" @drop="onDrop(i)">
-          <template v-if="card.hasChildrens">
-            <Card v-for="(children, j) in card.childrens" :key="j" :index="subIndex(i, j)" :card="children" />
-          </template> 
-        </Card>
+        <Card 
+          v-for="(card, i) in cards"
+          :key="i"
+          :card="card"
+          :draggable="true"
+          :card-index="card.order"
+          @dragstart="onDragStart(i)" 
+          @dragover="onDragOver(i)" 
+          @dragend="onDragEnd" 
+          @drop="onDrop(i)"
+        />
       </div>
 
     </section>
@@ -22,10 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import Card from './components/Card.vue';
+import { reactive, ref } from 'vue'
+import type { CardType } from '@/types'
+import Card from './components/Card.vue'
 
-const cards = reactive([
+const cards = reactive<Array<CardType>>([
   {
     id: 0,
     order: 1,
@@ -34,26 +41,31 @@ const cards = reactive([
     childrens: [
       {
         id: 0,
+        order: 1,
         hasChildrens: false,
         name: 'Максимал фойда (Нац. валюта)',
       },
       {
         id: 1,
+        order: 2,
         hasChildrens: false,
         name: 'On-line (Нац. валюта)',
       },
       {
         id: 2,
+        order: 3,
         hasChildrens: false,
         name: 'Аванс (Нац. валюта)',
       },
       {
         id: 3,
+        order: 4,
         hasChildrens: false,
         name: 'Максимал фойда (Ин. валюта)',
       },
       {
         id: 4,
+        order: 5,
         hasChildrens: false,
         name: 'On-line (Ин. валюта)',
       }
@@ -92,6 +104,7 @@ const cards = reactive([
       {
         id: 4,
         order: 5,
+        
         hasChildrens: true,
         name: 'On-line (Ин. валюта)',
         childrens: [
@@ -133,16 +146,12 @@ const cards = reactive([
 
 const draggingIndex = ref<number | null>(null)
 
-function subIndex(index: number, sub: number) {
-  return `${index + 1}.${sub + 1}`
-}
-
 function onDragStart(index: number) {
   draggingIndex.value = index
 }
 
 function onDragOver(index: number) {
-  if (index !== draggingIndex.value) {
+  if (index !== draggingIndex.value && draggingIndex.value !== null) {
     // Swap items in the array
     const draggedItem = cards[draggingIndex.value]
     cards.splice(draggingIndex.value, 1)
