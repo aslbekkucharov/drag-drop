@@ -1,6 +1,6 @@
-import type { CardType } from "@/types"
+import type { CardType, DnDPayloadType } from "@/types"
 
-export function applyDrag(arr: Array<CardType>, dragResult: Result) {
+export function applyDrag(arr: Array<CardType>, dragResult: DnDPayloadType): CardType[] {
     const { removedIndex, addedIndex, payload } = dragResult
 
     if (removedIndex === null && addedIndex === null) return arr

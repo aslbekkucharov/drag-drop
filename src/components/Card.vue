@@ -14,7 +14,7 @@
 
             <div class="card-col card-col--order">
                 <span class="card-col__name">Очередность</span>
-                <span class="card-col__value">{{ card.order }}</span>
+                <span class="card-col__value">{{ index }}</span>
             </div>
 
             <div class="card-col card-col--subcats">
@@ -43,26 +43,31 @@
         </div>
 
         <transition-group v-if="card.hasChildrens" name="slide-fade">
-            <Container v-if="isChildsCollapsed" @drop="onDrop" group-name="cards-2" v-bind="dndSettings">
+            <Container v-if="isChildsCollapsed" :get-child-payload="getChildPayload" @drop="onDrop" :group-name="`cards-${card.id}`" v-bind="dndSettings">
                 <Draggable v-for="(c, i) in card.childrens" :key="card.id">
-                    <Card :card-index="generateIndex(cardIndex, c)" :key="i" :card="c" />
+                    <Card :card-index="`${cardIndex}.${i + 1}`" :index="i + 1" :key="i" :card="c" />
                 </Draggable>
             </Container>
         </transition-group>
-            
+
     </div>
 </template>
 
 <script lang="ts" setup>
 import { applyDrag } from '@/utils'
 import { dndSettings } from '@/config'
-import type { CardType, DnDResultType } from '@/types'
 import { Container, Draggable } from "vue3-smooth-dnd"
-import { defineProps, computed, ref, type PropType, type ComputedRef } from 'vue'
+import type { CardType, DnDPayloadType } from '@/types'
+import { defineProps, computed, ref, type PropType, type ComputedRef, inject, type Ref } from 'vue'
 
 const props = defineProps({
     card: {
         type: Object as PropType<CardType>,
+        required: true
+    },
+
+    index: {
+        type: Number,
         required: true
     },
 
@@ -72,14 +77,12 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits<{
-    dragged: [id: number]
-}>()
+const cards = inject<Ref<CardType[]>>('cards')
 
 const isChildsCollapsed = ref<boolean>(false)
 
 const cardSubcats: ComputedRef<string | undefined> = computed(() => {
-    const subcats: Array<string> | string | undefined = props.card.hasChildrens ? props.card.childrens?.map((child: CardType) => child.name) : '-'
+    const subcats: string[] | string | undefined = props.card.hasChildrens ? props.card.childrens?.map((child: CardType) => child.name) : '-'
     const result = Array.isArray(subcats) ? subcats.join(' / ') : subcats
 
     return result && result.length > 90 ? result.substring(0, 90) + "..." : result
@@ -89,13 +92,33 @@ function toggleCollapse(): void {
     isChildsCollapsed.value = !isChildsCollapsed.value
 }
 
+function getChildPayload(index: number): { index: number, parentId: number | undefined } {
+    const parentId = props.card.childrens && props.card.childrens[index].parentId
+    
+    return {
+        index,
+        parentId
+    }
+}
+
 function generateIndex(parentIndex: number | string, card: CardType): string {
     return `${parentIndex}.${card.order}`
 }
 
-function onDrop(dropResult: DnDResultType) {
-  const arrCopy = props.card.childrens
-  const data = Array.isArray(arrCopy) ? applyDrag(arrCopy, dropResult) : []
+function updateChildrensRecursively(cards: CardType[], parentId: number, payload: DnDPayloadType) {
+    for (const card of cards) {
+        if (card.id === parentId) {
+            card.childrens = card.childrens ? applyDrag(card.childrens, payload) : []
+        } else if (card.childrens && card.childrens.length > 0) {
+            updateChildrensRecursively(card.childrens, parentId, payload)
+        }
+    }
+}
+
+function onDrop(data: DnDPayloadType) {
+    if (cards) {
+        updateChildrensRecursively(cards.value, data.payload.parentId, data)
+    }
 }
 
 </script>

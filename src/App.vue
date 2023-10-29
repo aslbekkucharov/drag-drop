@@ -11,7 +11,7 @@
           
       <Container @drop="onDrop" v-bind="dndSettings" group-name="cards-">
         <Draggable v-for="(card, i) in cards" :key="card.id">
-          <Card :card="card" :card-index="i + 1" />
+          <Card :card="card" :card-index="i + 1" :index="i + 1" />
         </Draggable>
       </Container>
 
@@ -20,14 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide} from 'vue'
 import { applyDrag } from '@/utils'
 import { dndSettings } from '@/config'
 import Card from '@/components/Card.vue'
-import type { CardType, DnDResultType } from '@/types'
+import type { CardType, DnDPayloadType } from '@/types'
 import { Container, Draggable } from "vue3-smooth-dnd"
 
-const cards = ref<Array<CardType>>([
+const cards = ref<CardType[]>([
   {
     id: 213,
     order: 1,
@@ -37,30 +37,35 @@ const cards = ref<Array<CardType>>([
       {
         id: 21389,
         order: 1,
+        parentId: 213,
         hasChildrens: false,
         name: 'Максимал фойда (Нац. валюта)',
       },
       {
         id: 2134,
         order: 2,
+        parentId: 213,
         hasChildrens: false,
         name: 'On-line (Нац. валюта)',
       },
       {
         id: 45234,
         order: 3,
+        parentId: 213,
         hasChildrens: false,
         name: 'Аванс (Нац. валюта)',
       },
       {
         id: 6154,
         order: 4,
+        parentId: 213,
         hasChildrens: false,
         name: 'Максимал фойда (Ин. валюта)',
       },
       {
         id: 33124,
         order: 5,
+        parentId: 213,
         hasChildrens: false,
         name: 'On-line (Ин. валюта)',
       }
@@ -75,43 +80,49 @@ const cards = ref<Array<CardType>>([
       {
         id: 6512,
         order: 1,
+        parentId: 12341,
         hasChildrens: false,
         name: 'Максимал фойда (Нац. валюта)',
       },
       {
         id: 18212,
         order: 2,
+        parentId: 12341,
         hasChildrens: false,
         name: 'On-line (Нац. валюта)',
       },
       {
         id: 439818,
         order: 3,
+        parentId: 12341,
         hasChildrens: false,
         name: 'Аванс (Нац. валюта)',
       },
       {
         id: 9281,
         order: 5,
-        
+        parentId: 12341,
         hasChildrens: true,
         name: 'On-line (Ин. валюта)',
         childrens: [
           {
             id: 213781,
             order: 1,
+            parentId: 9281,
             hasChildrens: false,
             name: 'Максимал фойда (Нац. валюта)',
           },
           {
             id: 2138,
             order: 2,
+            parentId: 9281,
             hasChildrens: false,
             name: 'On-line (Нац. валюта)',
           },
           {
             id: 2349218,
             order: 3,
+            parentId: 9281,
             hasChildrens: false,
             name: 'Аванс (Нац. валюта)',
           }
@@ -121,7 +132,9 @@ const cards = ref<Array<CardType>>([
   }
 ])
 
-function onDrop(dropResult: DnDResultType) {
+provide('cards', cards)
+
+function onDrop(dropResult: DnDPayloadType) {
   cards.value = applyDrag(cards.value, dropResult)
 }
 </script>
