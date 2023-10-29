@@ -5,3 +5,9 @@ export interface CardType {
     hasChildrens: boolean,
     childrens?: Array<CardType>
 }
+
+export interface DnDResultType {
+    removedIndex: number
+    addedIndex: number
+    payload?: any
+}
