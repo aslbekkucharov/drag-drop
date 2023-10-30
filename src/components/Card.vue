@@ -43,9 +43,9 @@
         </div>
 
         <transition-group v-if="card.hasChildrens" name="slide-fade">
-            <Container v-if="isChildsCollapsed" :get-child-payload="getChildPayload" @drop="onDrop" :group-name="`cards-${card.id}`" v-bind="dndSettings">
+            <Container v-if="isChildsCollapsed" :get-child-payload="getChildPayload" @drop="onDrop" :group-name="`cards-${card.id}`" v-bind="dndSettings" class="child-cards">
                 <Draggable v-for="(c, i) in card.childrens" :key="card.id">
-                    <Card :card-index="`${cardIndex}.${i + 1}`" :index="i + 1" :key="i" :card="c" />
+                    <Card :card-index="`${cardIndex}.${i + 1}`" :index="i + 1" :key="i" :card="c" class="children" />
                 </Draggable>
             </Container>
         </transition-group>
