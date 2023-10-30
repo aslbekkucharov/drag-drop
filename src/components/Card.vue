@@ -59,7 +59,7 @@ import { dndSettings } from '@/config'
 import { Container, Draggable } from "vue3-smooth-dnd"
 import type { CardType, DnDPayloadType } from '@/types'
 import { useWindowResize } from '@/composables/useWindowResize'
-import { defineProps, computed, ref, type PropType, type ComputedRef, inject, type Ref, watch, onMounted } from 'vue'
+import { defineProps, computed, ref, onMounted, watch, inject, type PropType, type ComputedRef, type Ref } from 'vue'
 
 const { width } = useWindowResize()
 
